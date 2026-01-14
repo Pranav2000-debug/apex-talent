@@ -1,0 +1,48 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_APEX_TALENT }}
+          script: |
+            set -e
+
+            echo "🚀 Starting deploy"
+
+            cd ~/apex-talent
+
+            echo "📥 Pulling latest code"
+            git pull origin main
+
+            echo "📦 Installing backend deps"
+            cd backend
+            npm ci
+
+            echo "🔁 Restarting backend"
+            pm2 restart backend --update-env
+
+            echo "🏗️ Building frontend"
+            cd ../frontend
+            npm ci
+            npm run build
+
+            echo "🧹 Updating frontend files"
+            sudo rm -rf /var/www/app/frontend/*
+            sudo cp -r dist/* /var/www/app/frontend/
+
+            echo "🔄 Reloading NGINX"
+            sudo systemctl reload nginx
+
+            echo "✅ Deploy complete"
