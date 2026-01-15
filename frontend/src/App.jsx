@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { lazy, Suspense } from "react";
 
 // Only lazy load the heavy/protected pages
@@ -33,6 +33,7 @@ function ProtectedRoutes() {
 
   // Redirect if not signed in
   if (!isSignedIn) {
+    toast.error("Please sign in");
     return <Navigate to="/" replace />;
   }
 
@@ -47,14 +48,25 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
 
+        {/* Protected Routes */}
         <Route element={<ProtectedRoutes />}>
-          {/* if needed add Suspense manually for lazy loaded routes */}
-          <Suspense>
-            <Route path="/problems" element={<ProblemsPage />} />
-          </Suspense>
-          <Suspense>
-            <Route path="/dashboard" element={<DashboardPage />} />
-          </Suspense>
+          <Route
+            path="/problems"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ProblemsPage />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DashboardPage />
+              </Suspense>
+            }
+          />
         </Route>
       </Routes>
 
