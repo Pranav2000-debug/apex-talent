@@ -49,8 +49,12 @@ function App() {
 
         <Route element={<ProtectedRoutes />}>
           {/* if needed add Suspense manually for lazy loaded routes */}
-          <Route path="/problems" element={<ProblemsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Suspense>
+            <Route path="/problems" element={<ProblemsPage />} />
+          </Suspense>
+          <Suspense>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Suspense>
         </Route>
       </Routes>
 

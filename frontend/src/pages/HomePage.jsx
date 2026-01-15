@@ -1,7 +1,7 @@
 import { ArrowRightIcon, CheckIcon, Code2Icon, UsersIcon, VideoIcon, ZapIcon } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
 import { memo } from "react";
-import Navbar from "../components/common//Navbar";
+import Navbar from "../components/common/Navbar";
 
 // Memoized hero image to prevent re-renders
 const HeroImage = memo(() => (
