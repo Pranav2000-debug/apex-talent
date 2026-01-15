@@ -31,6 +31,8 @@ const syncUser = inngest.createFunction({ id: "sync-user" }, { event: "clerk/use
     name: newUser.name,
     image: newUser.profileImage,
   });
+
+  // todo: send a welcome email after user creation using inngest
 });
 
 const deleteUserFromDB = inngest.createFunction({ id: "delete-user-from-db" }, { event: "clerk/user.deleted" }, async ({ event }) => {
