@@ -66,26 +66,43 @@ export const joinSession = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const clerkId = req.user.clerkId;
 
-  const session = await Session.findById(id);
-  if (!session) {
+  // First check if the user is trying to join their own session
+  const existingSession = await Session.findById(id);
+  if (!existingSession) {
     throw new ApiError(404, "Session not found");
   }
 
-  if (session.status !== "active") {
-    return res.status(400).json({ message: "cannot join a completed session" });
+  if (existingSession.status !== "active") {
+    throw new ApiError(400, "cannot join a completed session");
   }
 
-  if (session.host.toString() === userId.toString()) {
-    return res.status(400).json({ message: "Host cannot join their own sessions" });
+  if (existingSession.host.toString() === userId.toString()) {
+    throw new ApiError(400, "Host cannot join their own sessions");
   }
-  // check if session is full
-  if (session.participant) throw new ApiError(409, "Session is full");
 
-  session.participant = userId;
-  await session.save();
+  // Atomic update: only set participant if it's currently null
+  const session = await Session.findOneAndUpdate(
+    {
+      _id: id,
+      participant: null,
+    },
+    {
+      participant: userId,
+    },
+    {
+      new: true, // Return the updated document
+    }
+  );
 
+  // If findOneAndUpdate returns null, the session is already full
+  if (!session) {
+    throw new ApiError(409, "Session is full");
+  }
+
+  // Only after successful atomic update, add member to chat
   const channel = chatClient.channel("messaging", session.callId);
   await channel.addMembers([clerkId]);
+
   res.status(200).json(new ApiResponse(200, session));
 });
 
@@ -113,8 +130,8 @@ export const endSession = asyncHandler(async (req, res) => {
   // delete stream chat
   const channel = chatClient.channel("messaging", session.callId);
   await channel.delete();
-  res.status(200).json(new ApiResponse(200, null, "Session ended successfully"));
 
   session.status = "completed";
   await session.save();
+  return res.status(200).json(new ApiResponse(200, null, "Session ended successfully"));
 });
