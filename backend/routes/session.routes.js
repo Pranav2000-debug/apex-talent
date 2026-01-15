@@ -11,7 +11,7 @@ sessionRouter.get("/my-recent", protectRoute, getRecentSessions);
 // session management
 sessionRouter.get("/:id", protectRoute, getSessionById);
 sessionRouter.post("/:id/join", protectRoute, joinSession);
-sessionRouter.get("/:id/end", protectRoute, endSession);
+sessionRouter.post("/:id/end", protectRoute, endSession);
 
 
 export default sessionRouter;

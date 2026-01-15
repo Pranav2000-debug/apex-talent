@@ -4,7 +4,7 @@ import { ApiError, ApiResponse, asyncHandler } from "../utils/utilBarrel.js";
 
 export const createSession = asyncHandler(async (req, res) => {
   const { problem, difficulty } = req.body;
-  const userId = req.user_id;
+  const userId = req.user._id;
   const clerkId = req.user.clerkId;
 
   if (!problem || !difficulty) {
@@ -31,7 +31,7 @@ export const createSession = asyncHandler(async (req, res) => {
 
 export const getActiveSession = asyncHandler(async (_, res) => {
   const sessions = await Session.find({ status: "active" }).populate("host", "name profileImage email").sort({ createdAt: -1 }).limit(20);
-  if (!sessions) {
+  if (sessions.length === 0) {
     throw new ApiError(404, "No Active Sessions Found");
   }
   res.status(200).json(new ApiResponse(200, sessions, "Last 20 sessions fetched"));
@@ -71,8 +71,15 @@ export const joinSession = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Session not found");
   }
 
+  if (session.status !== "active") {
+    return res.status(400).json({ message: "cannot join a completed session" });
+  }
+
+  if (session.host.toString() === userId.toString()) {
+    return res.status(400).json({ message: "Host cannot join their own sessions" });
+  }
   // check if session is full
-  if (session.participant) return res.status(404).json({ message: "session is full" });
+  if (session.participant) throw new ApiError(409, "Session is full");
 
   session.participant = userId;
   await session.save();
@@ -91,16 +98,13 @@ export const endSession = asyncHandler(async (req, res) => {
 
   // check if user is host
   if (session.host.toString() !== userId.toString()) {
-    res.status(403).json({ message: "only the host can end the session" });
+    return res.status(403).json({ message: "only the host can end the session" });
   }
 
   // check if the session is already completed
   if (session.status === "completed") {
-    res.status(403).json({ message: "Session already completed" });
+    return res.status(403).json({ message: "Session already completed" });
   }
-
-  session.status = "completed";
-  await session.save();
 
   // delete stream vc
   const call = streamClient.video.call("default", session.callId);
@@ -110,4 +114,7 @@ export const endSession = asyncHandler(async (req, res) => {
   const channel = chatClient.channel("messaging", session.callId);
   await channel.delete();
   res.status(200).json(new ApiResponse(200, null, "Session ended successfully"));
+
+  session.status = "completed";
+  await session.save();
 });
