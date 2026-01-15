@@ -5,12 +5,18 @@ import Navbar from "../components/common/Navbar";
 
 // Memoized hero image to prevent re-renders
 const HeroImage = memo(() => (
-  <img
-    src="/hero_sunset.png"
-    alt="CodeCollab Platform"
-    className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transition-transform duration-500"
-    loading="lazy"
-  />
+  <picture>
+    <source srcSet="/hero_sunset.webp" type="image/webp" />
+    <source srcSet="/hero_sunset.png" type="image/png" />
+    <img
+      src="/hero_sunset.png"
+      alt="CodeCollab Platform"
+      className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transition-transform duration-500"
+      fetchPriority="high"
+      width="800"
+      height="600"
+    />
+  </picture>
 ));
 HeroImage.displayName = "HeroImage";
 
@@ -68,9 +74,7 @@ function HomePage() {
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-black leading-tight">
-              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                Code Together,
-              </span>
+              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Code Together,</span>
               <br />
               <span className="text-base-content">Learn Together</span>
             </h1>
