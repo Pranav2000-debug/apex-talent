@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { autoIndex: process.env.NODE_ENV !== "production" });
+    await mongoose.connect(process.env.MONGO_URI, { autoIndex: false });
     console.log("Connection established");
   } catch (error) {
     console.error("Connection error", error);
