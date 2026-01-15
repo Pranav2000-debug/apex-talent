@@ -5,3 +5,4 @@ node_modules
 apex-talent-v1.pem
 nginx.conf
 .github
+DEPLOY_EC2.md
