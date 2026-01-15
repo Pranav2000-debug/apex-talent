@@ -2,9 +2,14 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import ProblemsPage from "./pages/ProblemsPage";
 import { useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
 
 function App() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+  if (!isLoaded) {
+    return <div>Loading</div>;
+  }
   return (
     <>
       <Routes>
@@ -18,6 +23,5 @@ function App() {
 }
 
 export default App;
-
 
 // todo: react query or tanstack query
