@@ -1,7 +1,8 @@
 import { StreamChat } from "stream-chat";
+import { ENV } from "../../env.js";
 
-const apiKey = proccess.env.STREAM_API_KEY;
-const apiSecret = process.env.STREAM_API_SECRET;
+const apiKey = ENV.STREAM_API_KEY;
+const apiSecret = ENV.STREAM_API_SECRET;
 
 if (!apiKey || !apiSecret) {
   console.error("Stream api key or secret is missing");
@@ -26,6 +27,5 @@ export const deleteStreamUser = async (userId) => {
     console.error("Error deleting stream user", error);
   }
 };
-
 
 // todo: another method to generateToken
