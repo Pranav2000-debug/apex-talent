@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import { connectDB } from "../../db/connectDB.js";
-import User from "../../models/User.model.js";
+import { User } from "../../models/User.model.js";
 
 export const inngest = new Inngest({ id: "apex-talent" });
 
