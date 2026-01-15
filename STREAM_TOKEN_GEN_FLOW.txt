@@ -1,0 +1,37 @@
+[ User opens app ]
+        |
+        v
+[ Clerk Auth (frontend) ]
+        |
+        v
+[ User is logged in ]
+        |
+        v
+[ Frontend requests /api/stream/token ]
+        |
+        v
+[ protectRoute (Clerk middleware) ]
+  - verify session
+  - extract clerkId
+  - attach req.user
+        |
+        v
+[ Your backend controller ]
+  - chatClient.createToken(user.clerkId)
+        |
+        v
+[ Stream JWT returned ]
+        |
+        v
+[ Frontend initializes Stream SDK ]
+  - userId = clerkId
+  - token = stream JWT
+        |
+        v
+[ Stream WebSocket connection ]
+        |
+        v
+[ Chat ready ]
+        |
+        v
+[ Chat ready ]
