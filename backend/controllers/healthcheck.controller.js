@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/utilBarrel.js";
+import { ApiResponse, asyncHandler } from "../utils/utilBarrel.js";
 
 export const healthCheck = asyncHandler(async (req, res) => {
   const health = {
@@ -6,11 +6,5 @@ export const healthCheck = asyncHandler(async (req, res) => {
     message: "OK",
     timestamp: Date.now(),
   };
-
-  try {
-    res.send(health);
-  } catch (error) {
-    health.message = error;
-    res.status(503).send();
-  }
+  return res.status(200).json(new ApiResponse(200, health, health.message));
 });
