@@ -1,7 +1,7 @@
 import { ArrowRightIcon, CheckIcon, Code2Icon, UsersIcon, VideoIcon, ZapIcon } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
 import { memo } from "react";
-import Navbar from "../components/common/Navbar";
+import HomeNavbar from "../components/HomeNavbar";
 
 // Memoized hero image to prevent re-renders
 const HeroImage = memo(() => (
@@ -57,12 +57,8 @@ FeatureCard.displayName = "FeatureCard";
 function HomePage() {
   return (
     <div className="bg-linear-to-br from-base-100 via-base-200 to-base-300">
-      {/* 
-        Navbar has its own internal suspense boundary for auth.
-        The page content below renders immediately without waiting.
-      */}
-      <Navbar />
-
+      {/* Navbar has its own internal suspense boundary for auth. The page content below renders immediately without waiting.*/}
+      <HomeNavbar />
       {/* HERO SECTION - Renders immediately */}
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -73,14 +69,14 @@ function HomePage() {
               Real-time Collaboration
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-black leading-tight">
-              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Code Together,</span>
+            <h1 className="text-4xlxl lg:text-6xl font-black leading-tight">
+              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Make Keyboard Noises Together,</span>
               <br />
-              <span className="text-base-content">Learn Together</span>
+              <span className="text-base-content">Learn Together.</span>
             </h1>
 
             <p className="text-xl text-base-content/70 leading-relaxed max-w-xl">
-              The ultimate platform for collaborative coding interviews and pair programming. Connect face-to-face, code in real-time, and ace your
+              The ultimate platform for collaborative coding noises and pair programming. Connect face-to-face, code in real-time, and ace your
               technical interviews.
             </p>
 
