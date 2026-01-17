@@ -26,15 +26,17 @@ export const createSession = asyncHandler(async (req, res) => {
 
   await channel.create();
 
-  res.status(201).json(new ApiResponse(201, session, "Session created"));
+  res.status(201).json(new ApiResponse(201, { session }, "Session created"));
 });
 
 export const getActiveSession = asyncHandler(async (_, res) => {
-  const sessions = await Session.find({ status: "active" }).populate("host", "name profileImage email").sort({ createdAt: -1 }).limit(20);
+  const sessions = await Session.find({ status: "active" }).populate("host", "name profileImage email").sort({ createdAt: -1 }).populate("participant", "name profileImage email").sort({ createdAt: -1 }).limit(20);
   if (sessions.length === 0) {
-    throw new ApiError(404, "No Active Sessions Found");
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { sessions }, sessions.length === 0 ? "No Active Session" : `${sessions.length} sessions active.`));
   }
-  res.status(200).json(new ApiResponse(200, sessions, "Last 20 sessions fetched"));
+  res.status(200).json(new ApiResponse(200, { sessions }, "Last 20 sessions fetched"));
 });
 
 export const getRecentSessions = asyncHandler(async (req, res) => {
@@ -47,7 +49,7 @@ export const getRecentSessions = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(20);
 
-  res.status(200).json(new ApiResponse(200, sessions, "recent sessions fetched"));
+  res.status(200).json(new ApiResponse(200, { sessions }, sessions.length === 0 ? "No recent sessions" : `${sessions.length} recent sessions found`));
 });
 
 export const getSessionById = asyncHandler(async (req, res) => {
@@ -58,7 +60,7 @@ export const getSessionById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Session not found");
   }
 
-  res.status(200).json(new ApiResponse(200, session, "Session fetched by ID"));
+  res.status(200).json(new ApiResponse(200, { session }, "Session fetched by ID"));
 });
 
 export const joinSession = asyncHandler(async (req, res) => {
@@ -87,7 +89,7 @@ export const joinSession = asyncHandler(async (req, res) => {
 
   const channel = chatClient.channel("messaging", session.callId);
   await channel.addMembers([clerkId]);
-  res.status(200).json(new ApiResponse(200, session));
+  res.status(200).json(new ApiResponse(200, { session }));
 });
 
 export const endSession = asyncHandler(async (req, res) => {
