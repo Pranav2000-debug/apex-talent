@@ -14,7 +14,7 @@ export const sessionApi = {
     return res.data;
   },
   getSessionById: async (id) => {
-    const res = await api.get(`/sessions/${id}`, id);
+    const res = await api.get(`/sessions/${id}`);
     return res.data;
   },
   joinSession: async (id) => {
@@ -27,8 +27,6 @@ export const sessionApi = {
   },
   getStreamToken: async () => {
     const res = await api.get(`/chat/token`);
-    return res.data;
+    return res.data.data;
   },
 };
-
-

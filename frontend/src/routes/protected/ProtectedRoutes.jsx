@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import PageLoader from "../../ui/PageLoader";
 
 function ProtectedRoutes() {

@@ -30,7 +30,12 @@ export const createSession = asyncHandler(async (req, res) => {
 });
 
 export const getActiveSession = asyncHandler(async (_, res) => {
-  const sessions = await Session.find({ status: "active" }).populate("host", "name profileImage email").sort({ createdAt: -1 }).populate("participant", "name profileImage email").sort({ createdAt: -1 }).limit(20);
+  const sessions = await Session.find({ status: "active" })
+    .populate("host", "name profileImage email")
+    .sort({ createdAt: -1 })
+    .populate("participant", "name profileImage email")
+    .sort({ createdAt: -1 })
+    .limit(20);
   if (sessions.length === 0) {
     return res
       .status(200)
@@ -55,7 +60,7 @@ export const getRecentSessions = asyncHandler(async (req, res) => {
 export const getSessionById = asyncHandler(async (req, res) => {
   // getting session by id
   const { id } = req.params;
-  const session = await Session.findById(id).populate("host", "name email profileImage").populate("participant", "name email profileImage");
+  const session = await Session.findById(id).populate("host", "name email profileImage clerkId").populate("participant", "name email profileImage clerkId");
   if (!session) {
     throw new ApiError(404, "Session not found");
   }
@@ -74,7 +79,7 @@ export const joinSession = asyncHandler(async (req, res) => {
   }
 
   if (session.status !== "active") {
-    throw new ApiError(400, "Cannot join an active session");
+    throw new ApiError(400, "Cannot join an inactive session");
   }
 
   if (session.host.toString() === userId.toString()) {
