@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 
 export const protectRoute = [
-  requireAuth({signInUrl: "/sign-in"}),
+  requireAuth(),
   asyncHandler(async (req, res, next) => {
     const clerkId = req.auth()?.userId;
 
