@@ -15,6 +15,7 @@ import PageLoader from "./ui/PageLoader";
 
 // Protected route wrapper that doesn't block initial render
 import ProtectedRoutes from "./routes/protected/ProtectedRoutes";
+import ProblemPage from "./pages/ProblemPage";
 
 function App() {
   return (
@@ -34,7 +35,14 @@ function App() {
               </Suspense>
             }
           />
-
+          <Route
+            path="/problem/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ProblemPage />
+              </Suspense>
+            }
+          />
           <Route
             path="/dashboard"
             element={

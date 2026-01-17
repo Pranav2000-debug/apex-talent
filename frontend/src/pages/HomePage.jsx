@@ -1,7 +1,8 @@
 import { ArrowRightIcon, CheckIcon, Code2Icon, UsersIcon, VideoIcon, ZapIcon } from "lucide-react";
-import { SignInButton } from "@clerk/clerk-react";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { memo } from "react";
 import HomeNavbar from "../components/HomeNavbar";
+import { Link } from "react-router-dom";
 
 // Memoized hero image to prevent re-renders
 const HeroImage = memo(() => (
@@ -70,7 +71,9 @@ function HomePage() {
             </div>
 
             <h1 className="text-4xlxl lg:text-6xl font-black leading-tight">
-              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">Make Keyboard Noises Together,</span>
+              <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                Make Keyboard Noises Together,
+              </span>
               <br />
               <span className="text-base-content">Learn Together.</span>
             </h1>
@@ -98,12 +101,22 @@ function HomePage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
-              <SignInButton mode="modal">
-                <button className="btn btn-primary btn-lg">
-                  Start Coding Now
-                  <ArrowRightIcon className="size-5" />
-                </button>
-              </SignInButton>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="btn btn-primary btn-lg">
+                    Start Coding Now
+                    <ArrowRightIcon className="size-5" />
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link to={"/problems"}>
+                  <button className="btn btn-primary btn-lg">
+                    Problems
+                    <ArrowRightIcon className="size-5" />
+                  </button>
+                </Link>
+              </SignedIn>
 
               <button className="btn btn-outline btn-lg">
                 <VideoIcon className="size-5" />
