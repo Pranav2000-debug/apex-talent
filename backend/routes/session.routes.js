@@ -4,17 +4,7 @@ import { createSession, endSession, getActiveSession, getRecentSessions, getSess
 
 const sessionRouter = express.Router();
 
-sessionRouter.post(
-  "/",
-  (req, res, next) => {
-    console.log("🔵 POST /sessions route hit!");
-    console.log("🔵 Request body:", req.body);
-    console.log("🔵 Request headers:", req.headers);
-    next();
-  },
-  protectRoute,
-  createSession,
-);
+sessionRouter.post("/", protectRoute, createSession);
 sessionRouter.get("/active", protectRoute, getActiveSession);
 sessionRouter.get("/my-recent", protectRoute, getRecentSessions);
 
