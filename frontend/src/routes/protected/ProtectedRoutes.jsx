@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import PageLoader from "../../ui/PageLoader";
 
 function ProtectedRoutes() {
-  const { isSignedIn, isLoaded } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -22,7 +22,7 @@ function ProtectedRoutes() {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return <Outlet context={{ user }} />;
 }
 
 export default ProtectedRoutes;
